@@ -6,25 +6,27 @@
  * and open the template in the editor.
  */
 
-echo flipText("oh yeah yeah");
-
-function flipText($text ){
-    $flippedText = "";
-    for ($index = strlen($text) ;$index >= 0 ;$index--){
-        $flippedText = $flippedText.$text[$index];
+include_once '../integrations/DbHandler.php';
+class Palindroom {
+    private $text;
+    private $flippedText;
+    
+    function flipText($text){
+        
+        $this->text=$text;
+        $flippedText = "";
+        for ($index = strlen($text)-1 ;$index >= 0 ;$index--){
+            $flippedText = $flippedText.$text[$index];
+        }
+        $this->flippedText = $flippedText;
     }
-    return $flippedText;
-}
-
-
-
-$options = [
-    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    PDO::ATTR_EMULATE_PREAPRES   7=> false,
-];
-try {
-    $pdo = new PDO($dsn, $user, $pass, $options);
-} catch (Exception $e) {
-    throw new \PDOException($e->getMessage(), (int)$e->getCode()); 
+    
+    function getFlippedText(){
+        return $this->flippedText;
+    }
+    
+    function heeftFlippedTextEenBetekenis(){
+        $db = new DbHandler();
+        return $db->findWoord($this->flippedText);
+    }
 }
